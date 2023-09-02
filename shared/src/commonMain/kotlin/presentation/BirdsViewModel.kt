@@ -12,7 +12,11 @@ import kotlinx.coroutines.launch
 
 data class BirdsUiState(
     val images: List<BirdImage> = emptyList(),
-)
+    val selectedCategory: String? = null
+) {
+    val categories = images.map {it.category }.toSet()
+    val selectedImages = images.filter { it.category == selectedCategory }
+}
 
 class BirdsViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(BirdsUiState())
@@ -20,6 +24,12 @@ class BirdsViewModel: ViewModel() {
 
     init {
         updateImages()
+    }
+
+    fun selectCategory(category: String) {
+        _uiState.update {
+            it.copy(selectedCategory = category)
+        }
     }
 
     private fun updateImages() {
